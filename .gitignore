@@ -33,3 +33,4 @@ Thumbs.db
 .env
 static/profile_pics/*
 instance/league.db
+config.py

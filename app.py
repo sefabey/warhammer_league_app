@@ -13,6 +13,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['UPLOAD_FOLDER'] = os.path.join('static', 'profile_pics')
 app.config['SESSION_COOKIE_SAMESITE'] = 'None'
 app.config['SESSION_COOKIE_SECURE'] = True
+app.config['DEBUG'] = False
+app.config['TEMPLATES_AUTO_RELOAD'] = False
 
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
