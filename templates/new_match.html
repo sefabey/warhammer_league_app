@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Submit New Match</h2>
+<form method="post">
+  <div class="mb-3">
+    <label class="form-label">Match Date</label>
+    <input type="datetime-local" name="match_date" class="form-control">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Player 1</label>
+    <select name="player1" class="form-select" required>
+      {% for user in users %}
+        <option value="{{ user.id }}">{{ user.username }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Player 2</label>
+    <select name="player2" class="form-select" required>
+      {% for user in users %}
+        <option value="{{ user.id }}">{{ user.username }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="row">
+    <div class="col">
+      <h4>Player 1 Details</h4>
+      <div class="mb-3">
+        <label class="form-label">Army Name</label>
+        <input type="text" name="player1_army" class="form-control">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Score</label>
+        <input type="number" name="player1_score" class="form-control" required>
+      </div>
+    </div>
+    <div class="col">
+      <h4>Player 2 Details</h4>
+      <div class="mb-3">
+        <label class="form-label">Army Name</label>
+        <input type="text" name="player2_army" class="form-control">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Score</label>
+        <input type="number" name="player2_score" class="form-control" required>
+      </div>
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary">Submit Match</button>
+</form>
+{% endblock %}

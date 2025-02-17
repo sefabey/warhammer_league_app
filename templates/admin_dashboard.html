@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Admin Dashboard</h2>
+
+<h3>Users</h3>
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>User ID</th>
+      <th>Username</th>
+      <th>Registration Bonus Awarded</th>
+      <th>Admin</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for user in users %}
+    <tr>
+      <td>{{ user.id }}</td>
+      <td>{{ user.username }}</td>
+      <td>{{ 'Yes' if user.registration_bonus else 'No' }}</td>
+      <td>{{ 'Yes' if user.is_admin else 'No' }}</td>
+      <td>
+        <a href="{{ url_for('edit_user', user_id=user.id) }}" class="btn btn-info btn-sm">Edit</a>
+        <form action="{{ url_for('reset_password', user_id=user.id) }}" method="post" style="display:inline;">
+          <button type="submit" class="btn btn-warning btn-sm">Reset Password</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<h3>Matches</h3>
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>Match ID</th>
+      <th>Date</th>
+      <th>Player 1</th>
+      <th>Player 2</th>
+      <th>Score</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for match in matches %}
+    <tr>
+      <td>{{ match.id }}</td>
+      <td>{{ match.match_date.strftime("%Y-%m-%d %H:%M") }}</td>
+      <td>{{ match.player1.username }}</td>
+      <td>{{ match.player2.username }}</td>
+      <td>{{ match.player1_score }} - {{ match.player2_score }}</td>
+      <td>
+        <a href="{{ url_for('edit_match', match_id=match.id) }}" class="btn btn-info btn-sm">Edit</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

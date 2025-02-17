@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Your Profile</h2>
+<div class="mb-3">
+  {% if current_user.profile_picture %}
+    <img src="{{ url_for('static', filename='profile_pics/' + current_user.profile_picture) }}" alt="Profile Picture" class="img-thumbnail">
+  {% endif %}
+</div>
+<form method="post" enctype="multipart/form-data">
+  <div class="mb-3">
+    <label class="form-label">Username</label>
+    <input type="text" name="username" class="form-control" value="{{ current_user.username }}">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Profile Picture</label>
+    <input type="file" name="profile_picture" class="form-control">
+  </div>
+  <button type="submit" class="btn btn-primary">Update Profile</button>
+</form>
+{% endblock %}

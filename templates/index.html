@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Recent Matches</h2>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Player 1</th>
+      <th>Score</th>
+      <th>Player 2</th>
+      <th>Score</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for match in matches %}
+    <tr>
+      <td>{{ match.match_date.strftime("%Y-%m-%d %H:%M") }}</td>
+      <td>
+        <a href="{{ url_for('user_history', user_id=match.player1.id) }}">
+          {{ match.player1.username }}
+        </a>
+      </td>
+      <td>{{ match.player1_score }}</td>
+      <td>
+        <a href="{{ url_for('user_history', user_id=match.player2.id) }}">
+          {{ match.player2.username }}
+        </a>
+      </td>
+      <td>{{ match.player2_score }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<h2>League Table</h2>
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>Profile</th>
+      <th>Username</th>
+      <th>Points</th>
+      <th>Matches</th>
+      <th>Wins</th>
+      <th>Draws</th>
+      <th>Losses</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for entry in league_table %}
+    <tr>
+      <td>
+        {% if entry.profile_picture %}
+          <img src="{{ url_for('static', filename='profile_pics/' + entry.profile_picture) }}" alt="Profile Picture" style="height:50px;">
+        {% else %}
+          <img src="https://via.placeholder.com/50" alt="No Profile Picture">
+        {% endif %}
+      </td>
+      <td>
+        <a href="{{ url_for('user_history', user_id=entry.id) }}">
+          {{ entry.username }}
+        </a>
+      </td>
+      <td>{{ entry.points }}</td>
+      <td>{{ entry.matches }}</td>
+      <td>{{ entry.wins }}</td>
+      <td>{{ entry.draws }}</td>
+      <td>{{ entry.losses }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

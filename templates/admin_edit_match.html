@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Edit Match</h2>
+<form method="post">
+  <div class="mb-3">
+    <label for="match_date" class="form-label">Match Date</label>
+    <input type="datetime-local" name="match_date" class="form-control" value="{{ match.match_date.isoformat()[:-3] }}">
+  </div>
+  <div class="mb-3">
+    <label for="player1" class="form-label">Player 1</label>
+    <select name="player1" class="form-select" required>
+      {% for user in users %}
+        <option value="{{ user.id }}" {% if user.id == match.player1_id %}selected{% endif %}>{{ user.username }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="mb-3">
+    <label for="player2" class="form-label">Player 2</label>
+    <select name="player2" class="form-select" required>
+      {% for user in users %}
+        <option value="{{ user.id }}" {% if user.id == match.player2_id %}selected{% endif %}>{{ user.username }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="row">
+    <div class="col">
+      <div class="mb-3">
+        <label for="player1_army" class="form-label">Player 1 Army</label>
+        <input type="text" name="player1_army" class="form-control" value="{{ match.player1_army }}">
+      </div>
+      <div class="mb-3">
+        <label for="player1_score" class="form-label">Player 1 Score</label>
+        <input type="number" name="player1_score" class="form-control" value="{{ match.player1_score }}" required>
+      </div>
+    </div>
+    <div class="col">
+      <div class="mb-3">
+        <label for="player2_army" class="form-label">Player 2 Army</label>
+        <input type="text" name="player2_army" class="form-control" value="{{ match.player2_army }}">
+      </div>
+      <div class="mb-3">
+        <label for="player2_score" class="form-label">Player 2 Score</label>
+        <input type="number" name="player2_score" class="form-control" value="{{ match.player2_score }}" required>
+      </div>
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary">Update Match</button>
+</form>
+{% endblock %}
