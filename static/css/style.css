@@ -1,0 +1,125 @@
+/* Base body and typography */
+body {
+    background: #f4f7f6;
+    color: #333;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Navbar */
+  .navbar {
+    background: #2c3e50 !important;
+    border-bottom: 2px solid #1a252f;
+  }
+  
+  .navbar-brand {
+    font-weight: bold;
+    font-size: 1.4rem;
+  }
+  
+  /* Container spacing */
+  .container {
+    margin-top: 20px;
+  }
+  
+  /* Tables */
+  .table {
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+  }
+  
+  .table th, .table td {
+    vertical-align: middle;
+    padding: 12px;
+  }
+  
+  /* Cards */
+  .card {
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+  }
+  
+  .card-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+  
+  /* Buttons */
+  .btn {
+    margin-right: 5px;
+    margin-bottom: 5px;
+    border-radius: 4px;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+  }
+  
+  .btn-primary {
+    background-color: #3498db;
+    border-color: #3498db;
+  }
+  
+  .btn-primary:hover {
+    background-color: #2980b9;
+    border-color: #2980b9;
+  }
+  
+  .btn-warning {
+    background-color: #f39c12;
+    border-color: #f39c12;
+  }
+  
+  .btn-warning:hover {
+    background-color: #e67e22;
+    border-color: #e67e22;
+  }
+  
+  .btn-danger {
+    background-color: #e74c3c;
+    border-color: #e74c3c;
+  }
+  
+  .btn-danger:hover {
+    background-color: #c0392b;
+    border-color: #c0392b;
+  }
+  
+  .btn-info {
+    background-color: #1abc9c;
+    border-color: #1abc9c;
+  }
+  
+  .btn-info:hover {
+    background-color: #16a085;
+    border-color: #16a085;
+  }
+  
+  /* Alerts */
+  .alert {
+    border-radius: 4px;
+    margin-top: 10px;
+  }
+  
+  /* Profile images */
+  img {
+    border-radius: 50%;
+    border: 2px solid #ddd;
+  }
+  
+  /* Form controls */
+  .form-control, .form-select {
+    border-radius: 4px;
+    padding: 10px;
+  }
+  
+  /* Custom spacing for admin dashboard buttons */
+  .admin-button-group a,
+  .admin-button-group form {
+    margin-right: 8px;
+    margin-bottom: 8px;
+    display: inline-block;
+  }
+  

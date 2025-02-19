@@ -1,79 +1,54 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>{{ user.username }}'s Profile</h2>
-<div class="row mb-4">
-  <div class="col-md-3">
-    {% if user.profile_picture %}
-      <img src="{{ url_for('static', filename='profile_pics/' + user.profile_picture) }}" alt="Profile Picture" class="img-thumbnail">
-    {% else %}
-      <img src="https://via.placeholder.com/150" alt="No Profile Picture" class="img-thumbnail">
-    {% endif %}
-  </div>
-  <div class="col-md-9">
-    <h4>Statistics</h4>
-    <ul>
-      <li>Total Matches: {{ stats.total_matches }}</li>
-      <li>Wins: {{ stats.wins }}</li>
-      <li>Draws: {{ stats.draws }}</li>
-      <li>Losses: {{ stats.losses }}</li>
-      <li>Total Points: {{ stats.total_points }}</li>
-    </ul>
-  </div>
+<h2>{{ user.username }}'s Match History</h2>
+
+<!-- Display user's profile picture and clickable username in header -->
+<div class="mb-3">
+  {% if user.profile_picture %}
+    <img src="{{ url_for('static', filename='profile_pics/' ~ user.profile_picture) }}" alt="Profile" style="height:80px;">
+  {% else %}
+    <img src="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png" alt="Generic Profile" style="height:40px;">
+  {% endif %}
+  <h3>
+    <a href="{{ url_for('user_history', user_id=user.id) }}">{{ user.username }}</a>
+  </h3>
 </div>
 
-<h2>Match History</h2>
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th>Date</th>
-      <th>Opponent</th>
-      <th>Your Score</th>
-      <th>Opponent Score</th>
-      <th>Your Army</th>
-      <th>Opponent Army</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for match in matches %}
-    <tr>
-      <td>{{ match.match_date.strftime("%Y-%m-%d %H:%M") }}</td>
-      <td>
-        {% if match.player1.id == user.id %}
-          <a href="{{ url_for('user_history', user_id=match.player2.id) }}">{{ match.player2.username }}</a>
-        {% else %}
-          <a href="{{ url_for('user_history', user_id=match.player1.id) }}">{{ match.player1.username }}</a>
-        {% endif %}
-      </td>
-      <td>
-        {% if match.player1.id == user.id %}
-          {{ match.player1_score }}
-        {% else %}
-          {{ match.player2_score }}
-        {% endif %}
-      </td>
-      <td>
-        {% if match.player1.id == user.id %}
-          {{ match.player2_score }}
-        {% else %}
-          {{ match.player1_score }}
-        {% endif %}
-      </td>
-      <td>
-        {% if match.player1.id == user.id %}
-          {{ match.player1_army }}
-        {% else %}
-          {{ match.player2_army }}
-        {% endif %}
-      </td>
-      <td>
-        {% if match.player1.id == user.id %}
-          {{ match.player2_army }}
-        {% else %}
-          {{ match.player1_army }}
-        {% endif %}
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+{% for group, matches in grouped_matches.items() %}
+  <h3>{{ group }} Matches</h3>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Player 1</th>
+        <th>Army / Detachment</th>
+        <th>Score</th>
+        <th>Player 2</th>
+        <th>Army / Detachment</th>
+        <th>Score</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for match in matches %}
+      <tr>
+        <td>{{ match.match_date.strftime("%Y-%m-%d %H:%M") }}</td>
+        <td>
+          <a href="{{ url_for('user_history', user_id=match.player1.id) }}">
+            {{ match.player1.username }}
+          </a>
+        </td>
+        <td>{{ match.player1_army }} / {{ match.player1_detachment or '-' }}</td>
+        <td>{{ match.player1_score }}</td>
+        <td>
+          <a href="{{ url_for('user_history', user_id=match.player2.id) }}">
+            {{ match.player2.username }}
+          </a>
+        </td>
+        <td>{{ match.player2_army }} / {{ match.player2_detachment or '-' }}</td>
+        <td>{{ match.player2_score }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endfor %}
 {% endblock %}

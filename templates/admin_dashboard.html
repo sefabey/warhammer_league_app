@@ -2,13 +2,20 @@
 {% block content %}
 <h2>Admin Dashboard</h2>
 
+<!-- Create New User -->
+<div class="mb-3">
+  <a href="{{ url_for('admin_create_user') }}" class="btn btn-primary">Create New User</a>
+</div>
+
+<!-- Users Section -->
 <h3>Users</h3>
 <table class="table table-bordered">
   <thead>
     <tr>
       <th>User ID</th>
+      <th>Profile</th>
       <th>Username</th>
-      <th>Registration Bonus Awarded</th>
+      <th>Registration Bonus</th>
       <th>Admin</th>
       <th>Actions</th>
     </tr>
@@ -17,6 +24,13 @@
     {% for user in users %}
     <tr>
       <td>{{ user.id }}</td>
+      <td>
+        {% if user.profile_picture %}
+          <img src="{{ url_for('static', filename='profile_pics/' ~ user.profile_picture) }}" alt="Profile" style="height:40px;">
+        {% else %}
+          No Pic
+        {% endif %}
+      </td>
       <td>{{ user.username }}</td>
       <td>{{ 'Yes' if user.registration_bonus else 'No' }}</td>
       <td>{{ 'Yes' if user.is_admin else 'No' }}</td>
@@ -31,12 +45,14 @@
   </tbody>
 </table>
 
+<!-- Matches Section -->
 <h3>Matches</h3>
 <table class="table table-bordered">
   <thead>
     <tr>
       <th>Match ID</th>
       <th>Date</th>
+      <th>Round</th>
       <th>Player 1</th>
       <th>Player 2</th>
       <th>Score</th>
@@ -48,14 +64,81 @@
     <tr>
       <td>{{ match.id }}</td>
       <td>{{ match.match_date.strftime("%Y-%m-%d %H:%M") }}</td>
+      <td>{{ match.round_number or '-' }}</td>
       <td>{{ match.player1.username }}</td>
       <td>{{ match.player2.username }}</td>
       <td>{{ match.player1_score }} - {{ match.player2_score }}</td>
       <td>
         <a href="{{ url_for('edit_match', match_id=match.id) }}" class="btn btn-info btn-sm">Edit</a>
+        <form action="{{ url_for('delete_match', match_id=match.id) }}" method="post" style="display:inline;">
+          <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+        </form>
       </td>
     </tr>
     {% endfor %}
   </tbody>
 </table>
+
+<!-- Event Management Section -->
+<h3>Event Management</h3>
+<div class="mb-3">
+  <a href="{{ url_for('create_event') }}" class="btn btn-primary">Create New Event</a>
+</div>
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>Event ID</th>
+      <th>Name</th>
+      <th>Date</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Status</th>
+      <th>Current Round</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for event in events %}
+    <tr>
+      <td>{{ event.id }}</td>
+      <td>{{ event.name }}</td>
+      <td>{{ event.event_date.strftime("%Y-%m-%d") }}</td>
+      <td>{{ event.event_type.capitalize() }}</td>
+      <td>{{ event.description or '' }}</td>
+      <td>{% if event.is_finished %}Finished{% else %}Active{% endif %}</td>
+      <td>
+        {% if event.event_type == 'tournament' %}
+          {{ event.current_round }}
+        {% else %}
+          -
+        {% endif %}
+      </td>
+      <td>
+        <a href="{{ url_for('event_detail', event_id=event.id) }}" class="btn btn-primary btn-sm">View Details</a>
+        {% if event.event_type == 'tournament' %}
+          <a href="{{ url_for('add_event_participants', event_id=event.id) }}" class="btn btn-info btn-sm">Manage Participants</a>
+          <a href="{{ url_for('admin_tournament_round', event_id=event.id) }}" class="btn btn-secondary btn-sm">Submit Round Scores</a>
+        {% endif %}
+        {% if not event.is_finished %}
+          <form action="{{ url_for('finalize_event', event_id=event.id) }}" method="post" style="display:inline;">
+            <button type="submit" class="btn btn-success btn-sm">Finalize</button>
+          </form>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<!-- Pagination for Events -->
+<div class="d-flex justify-content-center">
+  {% if pagination.has_prev %}
+    <a href="{{ url_for('admin_dashboard', page=pagination.prev_num) }}" class="btn btn-secondary me-2">Previous</a>
+  {% endif %}
+  <span>Page {{ pagination.page }} of {{ pagination.pages }}</span>
+  {% if pagination.has_next %}
+    <a href="{{ url_for('admin_dashboard', page=pagination.next_num) }}" class="btn btn-secondary ms-2">Next</a>
+  {% endif %}
+</div>
+
 {% endblock %}

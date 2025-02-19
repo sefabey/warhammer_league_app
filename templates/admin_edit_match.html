@@ -3,11 +3,11 @@
 <h2>Edit Match</h2>
 <form method="post">
   <div class="mb-3">
-    <label for="match_date" class="form-label">Match Date</label>
-    <input type="datetime-local" name="match_date" class="form-control" value="{{ match.match_date.isoformat()[:-3] }}">
+    <label class="form-label">Match Date</label>
+    <input type="datetime-local" name="match_date" class="form-control" value="{{ match.match_date.strftime('%Y-%m-%dT%H:%M') }}" required>
   </div>
   <div class="mb-3">
-    <label for="player1" class="form-label">Player 1</label>
+    <label class="form-label">Player 1</label>
     <select name="player1" class="form-select" required>
       {% for user in users %}
         <option value="{{ user.id }}" {% if user.id == match.player1_id %}selected{% endif %}>{{ user.username }}</option>
@@ -15,7 +15,7 @@
     </select>
   </div>
   <div class="mb-3">
-    <label for="player2" class="form-label">Player 2</label>
+    <label class="form-label">Player 2</label>
     <select name="player2" class="form-select" required>
       {% for user in users %}
         <option value="{{ user.id }}" {% if user.id == match.player2_id %}selected{% endif %}>{{ user.username }}</option>
@@ -24,22 +24,32 @@
   </div>
   <div class="row">
     <div class="col">
+      <h4>Player 1 Details</h4>
       <div class="mb-3">
-        <label for="player1_army" class="form-label">Player 1 Army</label>
+        <label class="form-label">Army Name</label>
         <input type="text" name="player1_army" class="form-control" value="{{ match.player1_army }}">
       </div>
       <div class="mb-3">
-        <label for="player1_score" class="form-label">Player 1 Score</label>
+        <label class="form-label">Detachment</label>
+        <input type="text" name="player1_detachment" class="form-control" value="{{ match.player1_detachment }}">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Score</label>
         <input type="number" name="player1_score" class="form-control" value="{{ match.player1_score }}" required>
       </div>
     </div>
     <div class="col">
+      <h4>Player 2 Details</h4>
       <div class="mb-3">
-        <label for="player2_army" class="form-label">Player 2 Army</label>
+        <label class="form-label">Army Name</label>
         <input type="text" name="player2_army" class="form-control" value="{{ match.player2_army }}">
       </div>
       <div class="mb-3">
-        <label for="player2_score" class="form-label">Player 2 Score</label>
+        <label class="form-label">Detachment</label>
+        <input type="text" name="player2_detachment" class="form-control" value="{{ match.player2_detachment }}">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Score</label>
         <input type="number" name="player2_score" class="form-control" value="{{ match.player2_score }}" required>
       </div>
     </div>

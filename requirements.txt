@@ -5,3 +5,4 @@ passlib==1.7.4
 Werkzeug==2.2.2
 gunicorn
 Pillow
+Flask-Migrate==4.1.0

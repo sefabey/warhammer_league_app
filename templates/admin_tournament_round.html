@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Tournament Round Scores - {{ event.name }}</h2>
+<p>Current Round: {{ event.current_round }}</p>
+<form method="post" action="{{ url_for('submit_round_scores', event_id=event.id) }}">
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Match ID</th>
+        <th>Player 1</th>
+        <th>Score</th>
+        <th>Player 2</th>
+        <th>Score</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for match in matches %}
+      <tr>
+        <td>{{ match.id }}</td>
+        <td>{{ match.player1.username }}</td>
+        <td><input type="number" name="score_{{ match.id }}_p1" class="form-control" value="{{ match.player1_score }}"></td>
+        <td>{{ match.player2.username }}</td>
+        <td><input type="number" name="score_{{ match.id }}_p2" class="form-control" value="{{ match.player2_score }}"></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <button type="submit" class="btn btn-primary">Submit Round Scores</button>
+</form>
+{% endblock %}

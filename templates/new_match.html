@@ -30,6 +30,10 @@
         <input type="text" name="player1_army" class="form-control">
       </div>
       <div class="mb-3">
+        <label class="form-label">Detachment</label>
+        <input type="text" name="player1_detachment" class="form-control">
+      </div>
+      <div class="mb-3">
         <label class="form-label">Score</label>
         <input type="number" name="player1_score" class="form-control" required>
       </div>
@@ -41,10 +45,23 @@
         <input type="text" name="player2_army" class="form-control">
       </div>
       <div class="mb-3">
+        <label class="form-label">Detachment</label>
+        <input type="text" name="player2_detachment" class="form-control">
+      </div>
+      <div class="mb-3">
         <label class="form-label">Score</label>
         <input type="number" name="player2_score" class="form-control" required>
       </div>
     </div>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Event (optional)</label>
+    <select name="event_id" class="form-select">
+      <option value="">None</option>
+      {% for event in active_events %}
+        <option value="{{ event.id }}">{{ event.name }} ({{ event.event_type.capitalize() }})</option>
+      {% endfor %}
+    </select>
   </div>
   <button type="submit" class="btn btn-primary">Submit Match</button>
 </form>

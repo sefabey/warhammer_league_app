@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Event Details: {{ event.name }}</h2>
+<p><strong>Date:</strong> {{ event.event_date.strftime("%Y-%m-%d %H:%M") }}</p>
+<p><strong>Type:</strong> {{ event.event_type.capitalize() }}</p>
+{% if event.description %}
+<p><strong>Description:</strong> {{ event.description }}</p>
+{% endif %}
+<p><strong>Status:</strong> {% if event.is_finished %}Finished{% else %}Active{% endif %}</p>
+{% if event.event_type == 'tournament' %}
+  <p><strong>Round:</strong> {% if event.is_finished %}Completed{% else %}Round {{ event.current_round - 1 }} of {{ event.num_rounds }}{% endif %}</p>
+  {% if event.champion_id %}
+    <p><strong>Champion:</strong> {{ (event.participants | selectattr("id", "equalto", event.champion_id) | list)[0].username }}</p>
+  {% endif %}
+{% endif %}
+
+<h3>Ranking {% if event.event_type == 'league' %}(League){% else %}(Tournament){% endif %}</h3>
+{% if ranking %}
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>Profile</th>
+      <th>Username</th>
+      <th>Points</th>
+      {% if event.event_type == 'tournament' %}
+      <th>Wins</th>
+      <th>Draws</th>
+      <th>Losses</th>
+      {% endif %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for r in ranking %}
+    <tr>
+      <td>
+        {% if r.profile_picture %}
+          <img src="{{ url_for('static', filename='profile_pics/' ~ r.profile_picture) }}" alt="Profile" style="height:40px;">
+        {% else %}
+          No Pic
+        {% endif %}
+      </td>
+      <td>{{ r.username }}</td>
+      <td>{{ r.points }}</td>
+      {% if event.event_type == 'tournament' %}
+      <td>{{ r.wins }}</td>
+      <td>{{ r.draws }}</td>
+      <td>{{ r.losses }}</td>
+      {% endif %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>No ranking available.</p>
+{% endif %}
+
+<h3>Match History</h3>
+{% if matches %}
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Round</th>
+      <th>Player 1</th>
+      <th>Score</th>
+      <th>Player 2</th>
+      <th>Score</th>
+      <th>Army 1</th>
+      <th>Army 2</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for match in matches %}
+    <tr>
+      <td>{{ match.match_date.strftime("%Y-%m-%d %H:%M") }}</td>
+      <td>{{ match.round_number or '-' }}</td>
+      <td>{{ match.player1.username }}</td>
+      <td>{{ match.player1_score }}</td>
+      <td>{{ match.player2.username }}</td>
+      <td>{{ match.player2_score }}</td>
+      <td>{{ match.player1_army }}</td>
+      <td>{{ match.player2_army }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>No matches recorded for this event.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Create New Event</h2>
+<form method="post">
+  <div class="mb-3">
+    <label for="name" class="form-label">Event Name</label>
+    <input type="text" name="name" class="form-control" required>
+  </div>
+  <div class="mb-3">
+    <label for="event_date" class="form-label">Event Date (ISO format)</label>
+    <input type="datetime-local" name="event_date" class="form-control">
+  </div>
+  <div class="mb-3">
+    <label for="event_type" class="form-label">Event Type</label>
+    <select name="event_type" class="form-select" required>
+      <option value="league">League</option>
+      <option value="tournament">Tournament</option>
+    </select>
+  </div>
+  <div class="mb-3">
+    <label for="num_rounds" class="form-label">Number of Rounds (default 3)</label>
+    <input type="number" name="num_rounds" class="form-control" value="3">
+  </div>
+  <div class="mb-3">
+    <label for="description" class="form-label">Description</label>
+    <textarea name="description" class="form-control" rows="3"></textarea>
+  </div>
+  <button type="submit" class="btn btn-primary">Create Event</button>
+</form>
+{% endblock %}

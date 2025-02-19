@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Edit User Details</h2>
+<h2>Edit User</h2>
 <form method="post">
   <div class="mb-3">
-    <label for="username" class="form-label">Username</label>
-    <input type="text" name="username" value="{{ user.username }}" class="form-control" required>
+    <label class="form-label">Username</label>
+    <input type="text" name="username" class="form-control" value="{{ user.username }}" required>
   </div>
   <div class="form-check mb-3">
     <input type="checkbox" name="is_admin" class="form-check-input" id="is_admin" {% if user.is_admin %}checked{% endif %}>

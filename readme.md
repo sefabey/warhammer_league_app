@@ -1,78 +1,121 @@
 # Hobbymouse 40k League Tracker
 
-This is a Python-based web application for tracking competitive Warhammer 40k league matches for Hobbymouse. It allows players to submit match results, track league standings, and view detailed profiles and match history.
+## A Python-based web application for managing competitive Warhammer 40k league and tournament play. 
 
-## League Rules
-1. Each player can play two league games per week, not facing the same opponent in the same week, only at Rhostio Specialist Coffee.
-2. Each list must be 2000 points, following standard matched play rules.
-3. Missions come from the Pariah Nexus Deck, or if both players agree, use UKTC/WTC.
-4. Bonus: 1 extra point is awarded for playing a new opponent (if the matchup is a first-time meeting).
-5. Additionally, 1 extra point is awarded for registering (granted once, after the first game).
-6. Scores must be recorded on the league tracker before leaving the premises.
+### Features
 
-## Features
-- **Match Submission:** Users can select a match date (which may differ from the submission date), choose army names, and input scores.
-- **Automatic New Opponent Bonus:** The system automatically deduces if the matchup is a first-time meeting and awards bonus points accordingly.
-- **User Profiles:** Click on a username to view a detailed profile with a rescaled profile picture (480px in height) and match statistics.
-- **Admin Portal:** Admin users can log in via a dedicated admin login page to manage users and reset passwords.
-- **Match History:** Detailed match history includes match dates, scores, and army names for both players.
+#### League Play
+- **Match Submission:**
+  - Players submit match results, including army and detachment data.
+  - Scoring:
+    - Win: 3 points
+    - Draw: 2 points
+    - Loss: 1 point
+    - New Opponent Bonus: 1 extra point (first meeting)
+    - Registration Bonus: 1 extra point (one-time)
+  - Max two league games per week (no repeat opponents in the same week) at Rhostio Specialist Coffee.
+- **League Table:**
+  - Displays detailed standings with profile pictures, number of matches, wins, draws, losses, and win rate.
+  - Usernames link to match history.
 
-## Project Structure
+#### Tournament Events
+- **Event Management:**
+  - Admins create events with custom round settings.
+- **Participant Management:**
+  - Admins add/remove participants.
+- **Tournament Rounds:**
+  - Auto-generates initial pairings.
+  - Admins submit scores and generate next-round pairings.
+  - Final round determines the champion.
+
+#### User Management
+- **Registration & Login:**
+  - Users register with a unique username.
+  - Random password generated and displayed once.
+- **Profile Management:**
+  - Users update profiles and upload pictures (rescaled to 480px height).
+- **Match History:**
+  - Users view match history, broken down by event.
+
+#### Admin Portal
+- **User Administration:**
+  - Create/edit users, reset passwords.
+- **Match Administration:**
+  - Edit/delete match submissions.
+- **Event Administration:**
+  - Manage events, rounds, scores, and view stats.
+
+#### Frontend & Styling
+- Bootstrap 5 for modern, responsive design.
+- Custom CSS enhancements.
+- Pagination for matches and events.
+
+### Project Structure
 ```
-project/
+warhammer_league_app/
 ├── app.py
 ├── requirements.txt
-├── README.md
+├── migrations/         # Flask-Migrate (Alembic)
 ├── templates/
 │   ├── base.html
 │   ├── index.html
-│   ├── register.html
 │   ├── login.html
-│   ├── admin_login.html
+│   ├── register.html
 │   ├── profile.html
 │   ├── new_match.html
 │   ├── user_history.html
-│   └── admin_dashboard.html
+│   ├── admin_dashboard.html
+│   ├── admin_create_user.html
+│   ├── admin_edit_user.html
+│   ├── admin_edit_match.html
+│   ├── admin_create_event.html
+│   ├── admin_add_event_participants.html
+│   ├── admin_tournament_round.html
+│   └── event_detail.html
 └── static/
-    └── profile_pics/  # For user profile pictures
+    ├── css/
+    │   └── style.css
+    ├── img/
+    │   └── generic.png
+    └── profile_pics/
 ```
 
-## Local Development
+### Local Development
+```bash
+git clone <your-repository-url>
+cd warhammer_league_app
+python3 -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+pip install -r requirements.txt
+flask db init  # if not already initialised
+flask db migrate -m "Initial migration"
+flask db upgrade
+python -m flask run
+```
 
-### Using Conda
-1. Create a new Conda environment:
-   ```bash
-   conda create -n league_tracker python=3.10
-   conda activate league_tracker
-   ```
-2. Install the required packages:
-   ```bash
-   pip install -r requirements.txt
-   ```
-3. Run the application:
-   ```bash
-   export FLASK_APP=app.py
-   python -m flask run
-   ```
+### Deployment & Updating on PythonAnywhere
+#### Update Your Code Repository
+```bash
+git add .
+git commit -m "Update for tournament, league table enhancements and pagination"
+git push origin main
+```
+#### Log in to PythonAnywhere
+- Go to the PythonAnywhere Dashboard.
+- Update Your Web App Source:
+  - Navigate to the "Web" tab.
+  - Click on "Pull latest code" or update via Git.
+  - Confirm updates (check app.py, templates, etc.).
 
-### Using venv
-1. Create a virtual environment:
-   ```bash
-   python3 -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   ```
-2. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-3. Run the application:
-   ```bash
-   export FLASK_APP=app.py
-   python -m flask run
-   ```
-
-## Deployment
-This application can be deployed on platforms such as Render, Heroku, or PythonAnywhere.
+#### Update Database Migrations on PythonAnywhere
+```bash
+flask db migrate -m "Update for tournament event management and pagination"
+flask db upgrade
+```
+#### Reload Your Web App
+- Go to the "Web" tab.
+- Click "Reload" to restart your app.
+- Test the application to confirm updates.
 
 ### Example for Heroku
 1. Create a `Procfile` with the following content:
@@ -88,9 +131,3 @@ Once deployed, obtain your application URL. To embed in Fourthwall, use an ifram
 ```html
 <iframe src="https://your-deployed-app-url.com" width="100%" height="600" frameborder="0"></iframe>
 ```
-
-## Notes
-- All text in this application uses British English.
-- Profile pictures are automatically rescaled to a height of 480 pixels upon upload.
-- The league rules are reiterated above for clarity.
-

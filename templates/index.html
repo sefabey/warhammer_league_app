@@ -1,38 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Recent Matches</h2>
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th>Date</th>
-      <th>Player 1</th>
-      <th>Score</th>
-      <th>Player 2</th>
-      <th>Score</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for match in matches %}
-    <tr>
-      <td>{{ match.match_date.strftime("%Y-%m-%d %H:%M") }}</td>
-      <td>
-        <a href="{{ url_for('user_history', user_id=match.player1.id) }}">
-          {{ match.player1.username }}
-        </a>
-      </td>
-      <td>{{ match.player1_score }}</td>
-      <td>
-        <a href="{{ url_for('user_history', user_id=match.player2.id) }}">
-          {{ match.player2.username }}
-        </a>
-      </td>
-      <td>{{ match.player2_score }}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-
-<h2>League Table</h2>
+<h2>HobbyMouse Warhammer 40K League Table</h2>
 <table class="table table-bordered">
   <thead>
     <tr>
@@ -43,30 +11,139 @@
       <th>Wins</th>
       <th>Draws</th>
       <th>Losses</th>
+      <th>Win Rate</th>
     </tr>
   </thead>
   <tbody>
-    {% for entry in league_table %}
+    {% for row in league_table %}
     <tr>
       <td>
-        {% if entry.profile_picture %}
-          <img src="{{ url_for('static', filename='profile_pics/' + entry.profile_picture) }}" alt="Profile Picture" style="height:50px;">
+        {% if row.profile_picture %}
+          <img src="{{ url_for('static', filename='profile_pics/' ~ row.profile_picture) }}" alt="Profile" style="height:40px;">
         {% else %}
-          <img src="https://via.placeholder.com/50" alt="No Profile Picture">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png" alt="Generic Profile" style="height:40px;">
         {% endif %}
-      </td>
+      </td>      
       <td>
-        <a href="{{ url_for('user_history', user_id=entry.id) }}">
-          {{ entry.username }}
-        </a>
+        <a href="{{ url_for('user_history', user_id=row.id) }}">{{ row.username }}</a>
       </td>
-      <td>{{ entry.points }}</td>
-      <td>{{ entry.matches }}</td>
-      <td>{{ entry.wins }}</td>
-      <td>{{ entry.draws }}</td>
-      <td>{{ entry.losses }}</td>
+      <td>{{ row.points }}</td>
+      <td>{{ row.matches }}</td>
+      <td>{{ row.wins }}</td>
+      <td>{{ row.draws }}</td>
+      <td>{{ row.losses }}</td>
+      <td>{{ row.win_rate|round(2) }}%</td>
     </tr>
     {% endfor %}
   </tbody>
 </table>
+
+<h2>Recent League Matches</h2>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Player 1</th>
+      <th>Army / Detachment</th>
+      <th>Score</th>
+      <th>Player 2</th>
+      <th>Army / Detachment</th>
+      <th>Score</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for match in league_matches %}
+    <tr>
+      <td>{{ match.match_date.strftime("%Y-%m-%d %H:%M") }}</td>
+      <td>
+        <a href="{{ url_for('user_history', user_id=match.player1.id) }}">
+          {{ match.player1.username }}
+        </a>
+      </td>
+      <td>{{ match.player1_army }} / {{ match.player1_detachment or '-' }}</td>
+      <td>{{ match.player1_score }}</td>
+      <td>
+        <a href="{{ url_for('user_history', user_id=match.player2.id) }}">
+          {{ match.player2.username }}
+        </a>
+      </td>
+      <td>{{ match.player2_army }} / {{ match.player2_detachment or '-' }}</td>
+      <td>{{ match.player2_score }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<!-- Pagination Links (if using pagination) -->
+<nav aria-label="Page navigation">
+  <ul class="pagination">
+    {% if pagination.has_prev %}
+      <li class="page-item">
+        <a class="page-link" href="{{ url_for('index', page=pagination.prev_num) }}">Previous</a>
+      </li>
+    {% else %}
+      <li class="page-item disabled">
+        <span class="page-link">Previous</span>
+      </li>
+    {% endif %}
+    <li class="page-item disabled">
+      <span class="page-link">Page {{ pagination.page }} of {{ pagination.pages }}</span>
+    </li>
+    {% if pagination.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="{{ url_for('index', page=pagination.next_num) }}">Next</a>
+      </li>
+    {% else %}
+      <li class="page-item disabled">
+        <span class="page-link">Next</span>
+      </li>
+    {% endif %}
+  </ul>
+</nav>
+
+<h2>League Scoring Rules</h2>
+<div class="card mb-4">
+  <div class="card-body">
+    <ul>
+      <li>Each player can play <strong>two league games per week</strong>, not facing the same opponent in the same week, only at <em>Rhostio Specialist Coffee</em>.</li>
+      <li>Each list must be <strong>1000 points</strong>, following standard matched play rules.</li>
+      <li>Missions come from the <strong>Pariah Nexus Deck</strong>, or if both players agree, use <strong>UKTC/WTC</strong>.</li>
+      <li><strong>Bonus:</strong> 1 extra point is awarded for playing a new opponent (if it is a first-time meeting).</li>
+      <li><strong>Registration Bonus:</strong> 1 extra point is awarded for registering (granted once, after the first game).</li>
+      <li>Scores must be recorded on the league tracker before leaving the premises.</li>
+    </ul>
+  </div>
+</div>
+
+<h2>Active Events</h2>
+<div class="row">
+  {% for event in ongoing_events %}
+  <div class="col-md-4">
+    <div class="card mb-3">
+      <div class="card-body">
+        <h5 class="card-title">{{ event.name }}</h5>
+        <p class="card-text"><small class="text-muted">{{ event.event_date.strftime("%Y-%m-%d") }}</small></p>
+        <p class="card-text">{{ event.event_type.capitalize() }}</p>
+        <a href="{{ url_for('event_detail', event_id=event.id) }}" class="btn btn-primary btn-sm">View Event</a>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<h2>Past (Finished) Events</h2>
+<div class="row">
+  {% for event in finished_events %}
+  <div class="col-md-4">
+    <div class="card mb-3">
+      <div class="card-body">
+        <h5 class="card-title">{{ event.name }}</h5>
+        <p class="card-text"><small class="text-muted">{{ event.event_date.strftime("%Y-%m-%d") }}</small></p>
+        <p class="card-text">{{ event.event_type.capitalize() }}</p>
+        <a href="{{ url_for('event_detail', event_id=event.id) }}" class="btn btn-primary btn-sm">View Event</a>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
 {% endblock %}
